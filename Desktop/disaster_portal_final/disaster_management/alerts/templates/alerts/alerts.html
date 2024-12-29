@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            overflow-y: auto; /* Enable smooth scrolling */
+        }
+        .alert-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            margin: 20px auto;
+            padding: 40px; /* Increased padding */
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.5s ease;
+            max-width: 1200px; /* Increased max-width for alert cards */
+        }
+        .alert-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+        .alert-header {
+            font-size: 1.75rem; /* Increased header font size */
+            font-weight: bold;
+            color: #4a4a4a;
+            margin-bottom: 15px; /* Increased margin */
+        }
+        .alert-info p {
+            margin: 10px 0; /* Increased margin between paragraphs */
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mx-auto py-8">
+    <h1 class="text-center text-white text-4xl mb-4">Disaster Alerts</h1>
+
+    <form method="GET" class="flex justify-center mb-4">
+        <input type="text" name="search" id="searchBox" placeholder="Search Alerts..." class="border rounded-l-lg p-2 w-1/3" value="{{ request.GET.search }}"/>
+        <button type="submit" class="bg-blue-500 text-white rounded-r-lg p-2 hover:bg-blue-600">Search</button>
+    </form>
+    
+    <div class="flex justify-center mb-4">
+        <form method="GET" class="flex space-x-4">
+            <select name="sort_by" class="border rounded-lg p-2">
+                <option value="">Sort By</option>
+                <option value="sent_time" {% if request.GET.sort_by == 'sent_time' %}selected{% endif %}>Sent Time</option>
+                <option value="severity" {% if request.GET.sort_by == 'severity' %}selected{% endif %}>Severity</option>
+            </select>
+            <button type="submit" class="bg-yellow-500 text-white rounded-lg p-2 hover:bg-yellow-600">Sort</button>
+        </form>
+    </div>
+
+    <div class="flex flex-col">
+        {% if alerts %}
+            {% for alert in alerts %}
+                <div class="alert-card">
+                    <div class="alert-header">{{ alert.headline }}</div>
+                    <div class="alert-info">
+                        <p><strong>Identifier:</strong> {{ alert.identifier }}</p>
+                        <p><strong>Sender:</strong> {{ alert.sender }}</p>
+                        <p><strong>Sent Time:</strong> {{ alert.sent_time }}</p>
+                        <p><strong>Status:</strong> {{ alert.status }}</p>
+                        <p><strong>Message Type:</strong> {{ alert.msg_type }}</p>
+                        <p><strong>Scope:</strong> {{ alert.scope }}</p>
+                        <p><strong>Category:</strong> {{ alert.category }}</p>
+                        <p><strong>Event:</strong> {{ alert.event }}</p>
+                        <p><strong>Urgency:</strong> {{ alert.urgency }}</p>
+                        <p><strong>Certainty:</strong> {{ alert.certainty }}</p>
+                        <p><strong>Effective:</strong> {{ alert.effective }}</p>
+                        <p><strong>Onset:</strong> {{ alert.onset }}</p>
+                        <p><strong>Expires:</strong> {{ alert.expires }}</p>
+                        <p><strong>Description:</strong> {{ alert.description }}</p>
+                        <p><strong>Area Description:</strong> {{ alert.area_desc }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert-card text-center">
+                <p class="text-lg text-gray-600">No alerts available.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

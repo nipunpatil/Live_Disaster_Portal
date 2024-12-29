@@ -1,0 +1,35 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded shadow-md w-80">
+        <h2 class="text-2xl font-semibold text-center mb-4">Login</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="text-red-500 mb-2">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="id_username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" name="username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required autofocus>
+            </div>
+            <div class="mb-4">
+                <label for="id_password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</button>
+        </form>
+        <p class="mt-4 text-center">
+            Don't have an account? <a href="{% url 'signup' %}" class="text-blue-600 hover:underline">Sign up</a>
+        </p>
+    </div>
+</body>
+</html>

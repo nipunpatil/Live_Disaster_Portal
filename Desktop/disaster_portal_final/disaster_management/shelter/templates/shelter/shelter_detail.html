@@ -1,0 +1,53 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Shelter Detail</title>
+</head>
+<!-- shelter/templates/shelter/shelter_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Shelter Detail</title>
+    <style>
+        #map {
+            height: 400px; /* Set the height of the map */
+            width: 100%; /* Set the width of the map */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-purple-500 to-blue-500 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-4">{{ shelter.health_facility_name }}</h1>
+        <ul class="space-y-2">
+            <li><strong>Pincode:</strong> {{ shelter.pincode }}</li>
+            <li><strong>Facility Type:</strong> {{ shelter.facility_type }}</li>
+            <li><strong>State:</strong> {{ shelter.state_name }}</li>
+            <li><strong>District:</strong> {{ shelter.district_name }}</li>
+            <li><strong>Taluka:</strong> {{ shelter.taluka_name }}</li>
+        </ul>
+        <div id="map" class="mt-4"></div> <!-- Map container -->
+        <a href="{% url 'shelter_search' %}" class="mt-4 inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300">Back to Search</a>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([{{ shelter.latitude }}, {{ shelter.longitude }}], 13); // Set the initial view
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Add a marker for the shelter location
+        var marker = L.marker([{{ shelter.latitude }}, {{ shelter.longitude }}]).addTo(map);
+    </script>
+</body>
+</html>

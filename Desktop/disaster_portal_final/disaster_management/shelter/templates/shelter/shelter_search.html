@@ -1,0 +1,47 @@
+<!-- shelter/templates/shelter/shelter_search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Shelter Search</title>
+</head>
+<body class="bg-gradient-to-r from-purple-500 to-blue-500 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-6">Find a Shelter</h1>
+        <form method="GET" class="space-y-4">
+            <div>
+                <label for="state_name" class="block text-gray-700">Select State:</label>
+                {{ form.state_name }}
+            </div>
+            <div>
+                <label for="district_name" class="block text-gray-700">Select District:</label>
+                {{ form.district_name }}
+            </div>
+            <div>
+                <label for="taluka_name" class="block text-gray-700">Select Taluka:</label>
+                {{ form.taluka_name }}
+            </div>
+            <button type="submit" class="w-full p-3 mt-4 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300">
+                Search
+            </button>
+        </form>
+
+        <h2 class="text-xl font-semibold mt-6">Results:</h2>
+        <ul class="mt-2">
+            {% if shelters %}
+                {% for shelter in shelters %}
+                    <li class="border-b py-2">
+                        <a href="{% url 'shelter_detail' shelter.sr_no %}" class="text-blue-500 hover:underline">
+                            {{ shelter.health_facility_name }}
+                        </a> - {{ shelter.state_name }}, {{ shelter.district_name }}, {{ shelter.taluka_name }}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>No shelters found.</p>
+            {% endif %}
+        </ul>
+    </div>
+</body>
+</html>

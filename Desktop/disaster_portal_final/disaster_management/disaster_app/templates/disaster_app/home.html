@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Management Portal</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 200px; /* Small view of the map */
+            width: 100%; /* Full width for the map */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 p-4">
+        <div class="container mx-auto flex justify-between">
+            <div class="text-white text-lg font-semibold">Disaster Portal</div>
+            <div class="relative">
+                <button class="text-white focus:outline-none">
+                    Menu
+                </button>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 hidden group-hover:block">
+                    <a href="/alerts" class="block px-4 py-2 text-gray-800 hover:bg-blue-200">Alerts</a>
+                    <a href="/shelter" class="block px-4 py-2 text-gray-800 hover:bg-blue-200">Shelter</a>
+                    <a href="/emergency" class="block px-4 py-2 text-gray-800 hover:bg-blue-200">Emergency</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-6 flex flex-wrap">
+        <!-- Left Side: Map -->
+        <div class="w-full md:w-1/2 p-4">
+            <h2 class="text-2xl font-bold mb-4">Welcome to the Disaster Portal</h2>
+            <div id="map"></div>
+        </div>
+
+        <!-- Right Side: Weather & Advantages -->
+        <div class="w-full md:w-1/2 p-4">
+            <h2 class="text-2xl font-bold mb-4">Current Weather</h2>
+            <div id="weather" class="bg-blue-500 text-white p-4 rounded-lg mb-4">
+                <p id="weather-info">Loading weather...</p>
+            </div>
+            
+            <h2 class="text-xl font-bold mb-2">Advantages of Our Portal</h2>
+            <ul class="list-disc pl-5 mb-4">
+                <li>Live feed integrated for real-time updates</li>
+                <li>Alerts available in regional languages</li>
+                <li>Emergency button for quick access</li>
+                <li>Geofenced alerts for localized notifications</li>
+                <li>Comprehensive information on natural and man-made disasters</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Emergency Button -->
+    <button id="emergency-button" class="fixed bottom-4 right-4 bg-red-600 text-white p-3 rounded-full shadow-lg hover:bg-red-700">
+        Emergency
+    </button>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Sample data for the map
+        var sampleAlerts = [
+            { latitude: 20.5937, longitude: 78.9629, event: "Flood" },
+            { latitude: 22.5726, longitude: 88.3639, event: "Earthquake" }
+        ];
+
+        sampleAlerts.forEach(function(alert) {
+            L.marker([alert.latitude, alert.longitude]).addTo(map)
+              .bindPopup(alert.event);
+        });
+
+        // Get the user's location and fetch weather data
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                // Fetch weather data (example API)
+                fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=YOUR_API_KEY&units=metric`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('weather-info').innerHTML = `
+                            Location: ${data.name}<br>
+                            Temperature: ${data.main.temp}°C<br>
+                            Condition: ${data.weather[0].description}
+                        `;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching weather data:', error);
+                        document.getElementById('weather-info').innerText = 'Could not retrieve weather data.';
+                    });
+            });
+        } else {
+            document.getElementById('weather-info').innerText = 'Geolocation is not supported by this browser.';
+        }
+    </script>
+</body>
+</html>
